@@ -5,7 +5,7 @@ with open(os.path.join(os.path.dirname(__file__), 'confapp','__init__.py')) as f
 	__version__ = re.search(r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]', fd.read(), re.MULTILINE).group(1)
 
 setup(
-	name='confapp',
+	name='confapp-shaliulab',
 	version=__version__,
 	packages=find_packages(),
 	include_package_data=True,
