@@ -1,32 +1,37 @@
-# TODO
 import argparse
+import os.path
+PATH="local_settings.py"
+
 # For some fucking reason, confapp is not loading from the local_settings.py
-def load_config():
-    with open("local_settings.py", "r") as filehandle:
-        data = filehandle.readlines()
-        data = [e.strip("\n") for e in data]
+def load_config(module):
 
-    config = {}
-    for line in data:
-        try:
-            key, value = line.split("=")
-            value=value.lstrip('"').rstrip('"').lstrip("'").rstrip("'")
-            if value =="False":
-                value=False
-            elif value=="True":
-                value=True
+    for k in module.__dir__():
+        config = {k: getattr(module, k)}
 
-            else:
-                try:
-                    value = float(value)
-                except ValueError:
-                    pass
+    if os.path.exists(PATH):
+        with open(PATH, "r") as filehandle:
+            data = filehandle.readlines()
+            data = [e.strip("\n") for e in data]
 
-            config[key] = value
+        for line in data:
+            try:
+                key, value = line.split("=")
+                value=value.lstrip('"').rstrip('"').lstrip("'").rstrip("'")
+                if value =="False":
+                    value=False
+                elif value=="True":
+                    value=True
 
-        except:
-            pass
+                else:
+                    try:
+                        value = float(value)
+                    except ValueError:
+                        pass
 
+                config[key] = value
+
+            except:
+                pass
     config = argparse.Namespace(**config)
 
     return config
